@@ -1,1 +1,57 @@
+name: Password save
+        
+services:
+  bitwarden:
+    container_name: save
+    image: vaultwarden/server:1.34.3-alpine
+    environment:
+      - "ADMIN_TOKEN=${ADMIN_TOKEN}"
+      - "WEBSOCKET_ENABLED=${WEBSOCKET_ENABLED}"
+    volumes:
+      - bwdata:/data
+    networks:
+      - backend_net
+    ports:
+      - '8889:8889'
+     # - 3012:3012
+    restart: unless-stopped
 
+  backup:
+   container_name: vw_backup
+   image: bruceforce/vaultwarden-backup:latest
+   environment:
+     - BACKUP_DIR=/backup/db_backup/
+     - BACKUP_DIR_PERMISSIONS=750
+     - BACKUP_ADD_DATABASE=true
+     - BACKUP_ADD_ATTACHMENTS=true
+     - BACKUP_ADD_CONFIG_JSON=true
+     - BACKUP_ADD_RSA_KEY=true
+     - BACKUP_ADD_SENDS=false
+     - VW_DATA_FOLDER=/data
+     - CRON_TIME=26 14,23 * * *
+     - TIMESTAMP=true
+     - UID=${UID}
+     - GID=${GID}
+     - TZ=Europe/Berlin
+     - DELETE_AFTER=17
+   init: true
+   network_mode: none
+   depends_on:
+     - bitwarden
+   volumes:
+     - ./backup:/backup
+     - bwdata:/data
+   restart: on-failure
+
+volumes:
+  bwdata:
+    driver: 'local'
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ${BASE_STACK_DIR}/app
+
+networks:
+  backend_net:
+    external: true
+    name: network_backend_net
