@@ -2,29 +2,11 @@ name: Password save
 
 
 services:
-  bitwarden:
-    image: vaultwarden/server:1.34.3-alpine
-    container_name: save
-    volumes:
-      - bwdata:/data
-    environment:
-      - "ADMIN_TOKEN=${ADMIN_TOKEN}"
-      - "WEBSOCKET_ENABLED=${WEBSOCKET_ENABLED}"
-    ports:
-      - '8889:8889'
-     # - 3012:3012
-    networks:
-      - backend_net
-    restart: unless-stopped
-
   backup:
    image: bruceforce/vaultwarden-backup:latest
    container_name: vw_backup
    depends_on:
      - bitwarden
-   volumes:
-     - ./backup:/backup
-     - bwdata:/data
    environment:
      - BACKUP_DIR=/backup/db_backup/
      - BACKUP_DIR_PERMISSIONS=750
@@ -41,8 +23,26 @@ services:
      - TZ=Europe/Berlin
      - DELETE_AFTER=17
    network_mode: none
+   volumes:
+     - ${BASE_STACK_DIR}/backup:/backup
+     - bwdata:/data
    init: true
    restart: on-failure
+
+  bitwarden:
+    image: vaultwarden/server:1.34.3-alpine
+    container_name: save
+    environment:
+      - "ADMIN_TOKEN=${ADMIN_TOKEN}"
+      - "WEBSOCKET_ENABLED=${WEBSOCKET_ENABLED}"
+    ports:
+      - '8889:8889'
+     # - 3012:3012
+    networks:
+      - backend_net
+    volumes:
+      - bwdata:/data
+    restart: unless-stopped
 
 volumes:
   bwdata:
