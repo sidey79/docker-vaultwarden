@@ -25,6 +25,7 @@ services:
      - GID=${GID}
      - TZ=Europe/Berlin
      - DELETE_AFTER=17
+     - ROCKET_PORT=8889
    network_mode: none
    restart: on-failure
    init: true
