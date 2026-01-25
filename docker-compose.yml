@@ -25,7 +25,6 @@ services:
      - GID=${GID}
      - TZ=Europe/Berlin
      - DELETE_AFTER=17
-     - ROCKET_PORT=8889
    network_mode: none
    restart: on-failure
    init: true
@@ -36,8 +35,9 @@ services:
     volumes:
       - bwdata:/data
     environment:
-      - "ADMIN_TOKEN=${ADMIN_TOKEN}"
-      - "WEBSOCKET_ENABLED=${WEBSOCKET_ENABLED}"
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+      - WEBSOCKET_ENABLED=${WEBSOCKET_ENABLED}
+      - ROCKET_PORT=8889
     ports:
       - '8889:8889'
      # - 3012:3012
