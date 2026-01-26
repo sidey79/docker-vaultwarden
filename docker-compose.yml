@@ -41,6 +41,7 @@ services:
     ports:
       - '8889:8889'
      # - 3012:3012
+    user: "${UID}:${GID}"
     networks:
       - backend_net
     restart: unless-stopped
