@@ -26,7 +26,7 @@ services:
      - TZ=Europe/Berlin
      - DELETE_AFTER=17
    network_mode: none
-   restart: on-failure
+   restart: on-failure:10
    init: true
 
   save:
