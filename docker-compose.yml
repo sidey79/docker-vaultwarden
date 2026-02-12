@@ -1,5 +1,17 @@
 name: Password save
 
+volumes:
+  bwdata:
+    driver: 'local'
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ${BASE_STACK_DIR}/app
+
+networks:
+  backend_net:
+    external: true
+    name: network_backend_net
 
 services:
   backup:
@@ -41,20 +53,7 @@ services:
     ports:
       - '8889:8889'
      # - 3012:3012
-    user: "${UID}:${GID}"
     networks:
       - backend_net
     restart: unless-stopped
-
-volumes:
-  bwdata:
-    driver: 'local'
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: ${BASE_STACK_DIR}/app
-
-networks:
-  backend_net:
-    external: true
-    name: network_backend_net
+    user: "${UID}:${GID}"
