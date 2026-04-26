@@ -1,18 +1,5 @@
 name: Password save
 
-volumes:
-  bwdata:
-    driver: 'local'
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: ${BASE_STACK_DIR}/app
-
-networks:
-  backend_net:
-    external: true
-    name: network_backend_net
-
 services:
   backup:
    image: bruceforce/vaultwarden-backup:2.1.4@sha256:ede1b229a2dd54af59cda87c086707274ae4073ecd2bde1a8ed9b1281ddc553e
@@ -68,3 +55,16 @@ services:
       - backend_net
     restart: unless-stopped
     user: "${UID}:${GID}"
+
+networks:
+  backend_net:
+    external: true
+    name: network_backend_net
+
+volumes:
+  bwdata:
+    driver: 'local'
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ${BASE_STACK_DIR}/app
