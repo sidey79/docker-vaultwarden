@@ -46,6 +46,11 @@ services:
       - SSO_ROLES_ENABLED=true
       - SSO_ROLES_DEFAULT_TO_USER=true
       - SSO_ROLES_TOKEN_PATH=/vaultwarden_roles
+      - SMTP_HOST=smtp-relay
+      - SMTP_PORT=25
+      - SMTP_SECURITY=off
+      - SMTP_FROM=${SMTP_FROM}
+      - SMTP_FROM_NAME=${SMTP_FROM_NAME:-Vaultwarden}
       - WEBSOCKET_ENABLED=${WEBSOCKET_ENABLED}
       - ROCKET_PORT=8889
     ports:
@@ -53,6 +58,7 @@ services:
      # - 3012:3012
     networks:
       - backend_net
+      - smtp_relay_net
     restart: unless-stopped
     user: "${UID}:${GID}"
 
@@ -60,6 +66,9 @@ networks:
   backend_net:
     external: true
     name: network_backend_net
+  smtp_relay_net:
+    external: true
+    name: smtp_relay_net
 
 volumes:
   bwdata:
